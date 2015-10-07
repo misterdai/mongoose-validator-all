@@ -1,14 +1,13 @@
 # Mongoose Validator All
 
 [![Build Status](https://travis-ci.org/misterdai/mongoose-validator-all.svg?branch=master)](https://travis-ci.org/misterdai/mongoose-validator-all)
-
 [![npm version](https://badge.fury.io/js/mongoose-validator-all.svg)](https://badge.fury.io/js/mongoose-validator-all)
 
-Validators for [Mongoose](http://mongoosejs.com) schemas utilising [validator.js](https://github.com/chriso/validator.js).
+A wrapper for the mongoose plugin [mongoose-validator](https://github.com/leepowellcouk/mongoose-validator), which itself wraps [validator.js](https://github.com/chriso/validator.js), to provide schema validation.
 
-Mongoose Validator simply returns Mongoose style validation objects that utilises validator.js for the data validation.
+This plugin supports all of the `mongoose-validator` functionality (by passing them through) but also provides an additional method called `multiValidate`.  This forces mongoose to test __every__ validation rule, instead of stopping at the first fail on a field.
 
-Mongoose-Validator-All is a fork on Mongoose-Validator.  It simply adds support for executing multiple validator.js rules, against a field, without stopping on the first fail (normal mongooose behaviour).  This is to avoid the problem of moving validation to your model, and forcing a user to resubmit several times to encounter different validation rules per submission.
+For more information, please check [mongoose-validator](https://github.com/leepowellcouk/mongoose-validator).  This README will only highlight the additional functionality that this plugin wrapper adds.
 
 ## Installation
 
@@ -20,143 +19,26 @@ $ npm install mongoose-validator-all --save
 
 ```javascript
 var mongoose = require('mongoose');
-var validate = require('mongoose-validator');
+var validate = require('mongoose-validator-all');
 
-var nameValidator = [
-  validate({
+var nameValidator = validate.multiValidate([
+  {
     validator: 'isLength',
     arguments: [3, 50],
     message: 'Name should be between {ARGS[0]} and {ARGS[1]} characters'
-  }),
-  validate({
+  }, {
     validator: 'isAlphanumeric',
     passIfEmpty: true,
     message: 'Name should contain alpha-numeric characters only'
-  })
-];
+  }
+]);
 
 var Schema = new mongoose.Schema({
   name: {type: String, required: true, validate: nameValidator}
 });
 ```
 
-Error objects are returned as normal via Mongoose.
-
-## Options
-
-### option.validator {string} or {function} - required
-Name of the validator or a custom function you wish to use, this can be any one of the [built-in validator.js validators](https://github.com/chriso/validator.js/#validators), or a [custom validator](#custom-validators).
-
-### option.arguments - optional
-Arguments to be passed to the validator. These can either be an array of arguments (for validators that can accept more than one i.e. `isLength`), or a single argument as any type.
-
-### option.passIfEmpty {boolean} - optional - default: false
-Some of the validator.js validators require a value to check against (isEmail, isUrl etc). There may be instances where you don't have a value to check i.e. a path that is not required and as such these few validators return an false value causing validation to fail. This can now be bypassed by setting the `passIfEmpty` option.
-
-### option.message - optional
-Set the error message to be used should the validator fail. If no error message is set then mongoose-validator will attempt to use one of the built-in default messages, if it can't then a simple message of 'Error' will be returned. Enhanced message templating is supported by giving the ability to use the validator arguments. You can use these like `{ARGS[argument index position]}`. Note: Use `{ARGS[0]}` if your arguments isn't an array.
-
-```javascript
-validate({
-  validator: 'isLength',
-  arguments: [3, 50],
-  message: 'Name should be between {ARGS[0]} and {ARGS[1]} characters'
-}),
-
-// On error produces: Name should be between 3 and 50 characters
-```
-The built in Mongoose message template variables still work as expected. You can find out more about those here: [http://mongoosejs.com/docs/api.html#error_messages_MongooseError-messages](http://mongoosejs.com/docs/api.html#error_messages_MongooseError-messages)
-
-### option.type - optional
-Set the type of validator type. If this is not defined, Mongoose will set this for you. Read more about this here: [http://mongoosejs.com/docs/api.html#schematype_SchemaType-validate](http://mongoosejs.com/docs/api.html#schematype_SchemaType-validate)
-
-### Extending the error properties (mongoose version >= 3.9.7)
-
-Any additional members added to the options object will be available in the 'err.properties' field of the mongoose validation error.
-
-```javascript
-var alphaValidator = validate({
-    validator: 'isAlphanumeric',
-    passIfEmpty: true,
-    message: 'Name should contain alpha-numeric characters only',
-    httpStatus: 400
-  });
-```
-In this example the error object returned by mongoose will have its 'properties' extended with httpStatus should validation fail. More details can be found about this here: [http://thecodebarbarian.com/2014/12/19/mongoose-397](http://thecodebarbarian.com/2014/12/19/mongoose-397)
-
-## Regular Expressions
-
-Mongoose Validator can use the validator.js `matches` method, however, it's worth noting that the regex can be passed in 2 ways - as per the validator.js documentation, firstly they can be passed as a literal:
-
-```javascript
-validate({
-  validator: 'matches',
-  arguments: /^[a-zA-Z\-]+$/i
-});
-```
-
-or as a string with a further argument containing any required modifiers:
-
-```javascript
-validate({
-  validator: 'matches',
-  arguments: ['^[a-zA-Z\-]+$', 'i']
-});
-```
-
-## Custom validators
-
-Custom validators can also be added - these are then added to the validator.js object.
-**NOTE**: Validator.js converts all values to strings internally for built-in validators - however custom validators do *not* do this. This allows you to create custom validators for checking all types such as arrays and objects.
-
-```javascript
-// extend([method name], [validator], [default error message])
-
-var extend = require('mongoose-validator').extend;
-
-extend('isString', function (val) {
-  return Object.prototype.toString.call(val) === '[object String]';
-}, 'Not a string');
-```
-
-Custom validators are called normally:
-
-```javascript
-validate({
-  validator: 'isString'
-});
-```
-
-Custom validator can be passed directly as a function:
-
-```javascript
-validate({
-  validator: function(val) {
-    return val > 0;
-  },
-  message: 'Count must be a positive number.'
-})
-```
-
-NOTE: As per validator.js documentation, the currently tested value is accessed through the first argument that is automatically passed to the validator function.
-
-## All validations tested
-
-Following the above, we can also force mongoose into validating all our rules without stopping at the first fail.
-
-```javascript
-validate.multiValidate([
-  {
-    validator: 'isLength',
-    arguments: [3, 10],
-    message: 'Name should be between {ARGS[0]} and {ARGS[1]} characters',
-  },
-  {
-    validator: 'isAlphanumeric',
-    message: '{PATH} should be alphanumeric',
-  }
-])
-```
+Error objects are returned as normal via Mongoose.  With the exception being that `multiValidate` returns an array of messages per document property validation error, instead of a single string.
 
 See mongoose issue [#2612](https://github.com/Automattic/mongoose/issues/2612) for further information.
 

@@ -4,10 +4,10 @@
 
 var mongoose      = require('mongoose'),
     should        = require('should'),
-    validate      = require('../lib/mongoose-validator'),
-    multiValidate = require('../lib/mongoose-validator').multiValidate,
-    extend        = require('../lib/mongoose-validator').extend,
-    validatorjs   = require('../lib/mongoose-validator').validatorjs,
+    validate      = require('../lib/mongoose-validator-all'),
+    multiValidate = require('../lib/mongoose-validator-all').multiValidate,
+    extend        = require('../lib/mongoose-validator-all').extend,
+    validatorjs   = require('../lib/mongoose-validator-all').validatorjs,
     Schema        = mongoose.Schema;
 
 // Create a custom validator directly to Node Validator prototype

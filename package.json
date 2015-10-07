@@ -9,41 +9,8 @@
   },
   "contributors": [
     {
-      "name": "Lee Powell",
-      "email": "lee@leepowell.co.uk",
-      "url": "https://leepowell.co.uk"
-    },
-    {
       "name": "szdc",
       "url": "http://github.com/szdc"
-    },
-    {
-      "name": "Francesco Pasqua",
-      "url": "https://github.com/cesconix/"
-    },
-    {
-      "name": "Igor Escobar",
-      "url": "https://github.com/igorescobar/"
-    },
-    {
-      "name": "Todd Bluhm",
-      "url": "https://github.com/toddbluhm/"
-    },
-    {
-      "name": "Subash Pathak",
-      "url": "https://github.com/subash/"
-    },
-    {
-      "name": "Kristijan Sedlak",
-      "url": "https://github.com/xpepermint"
-    },
-    {
-      "name": "Eric Saboia",
-      "url": "https://github.com/ericsaboia"
-    },
-    {
-      "name": "Rob Rodriguez",
-      "url": "https://github.com/rodriguise"
     }
   ],
   "repository": {
@@ -54,7 +21,7 @@
     "url": "https://github.com/misterdai/mongoose-validator-all/issues"
   },
   "license": "MIT",
-  "main": "./lib/mongoose-validator",
+  "main": "./lib/mongoose-validator-all",
   "scripts": {
     "test": "mocha -R list"
   },
@@ -69,8 +36,7 @@
     "schema"
   ],
   "dependencies": {
-    "underscore": "^1.8.3",
-    "validator": "^4.0.2"
+    "mongoose-validator": "^1.2.4"
   },
   "devDependencies": {
     "mongoose": "^4.0.5",
