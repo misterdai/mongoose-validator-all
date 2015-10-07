@@ -1,44 +1,22 @@
 {
-  "name": "mongoose-validator",
+  "name": "mongoose-validator-all",
   "description": "Validators for mongoose models utilising validator.js",
   "version": "1.2.4",
   "author": {
-    "name": "Lee Powell",
-    "email": "lee@leepowell.co.uk",
-    "url": "https://leepowell.co.uk"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/leepowellcouk/mongoose-validator.git"
-  },
-  "bugs": {
-    "url": "https://github.com/leepowellcouk/mongoose-validator/issues"
-  },
-  "license": "MIT",
-  "main": "./lib/mongoose-validator",
-  "scripts": {
-    "test": "mocha -R list"
-  },
-  "engines": {
-    "node": "*"
-  },
-  "keywords": [
-    "mongoose",
-    "validate",
-    "validation",
-    "models",
-    "schema"
-  ],
-  "dependencies": {
-    "underscore": "^1.8.3",
-    "validator": "^4.0.2"
-  },
-  "devDependencies": {
-    "mongoose": "^4.0.5",
-    "mocha": "^2.2.5",
-    "should": "^6.0.3"
+    "name": "David Boyer",
+    "email": "dave.npm@yougeezer.co.uk",
+    "url": "https://misterdai.yougeezer.co.uk"
   },
   "contributors": [
+    {
+      "name": "Lee Powell",
+      "email": "lee@leepowell.co.uk",
+      "url": "https://leepowell.co.uk"
+    },
+    {
+      "name": "szdc",
+      "url": "http://github.com/szdc"
+    },
     {
       "name": "Francesco Pasqua",
       "url": "https://github.com/cesconix/"
@@ -67,5 +45,36 @@
       "name": "Rob Rodriguez",
       "url": "https://github.com/rodriguise"
     }
-  ]
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/misterdai/mongoose-validator-all.git"
+  },
+  "bugs": {
+    "url": "https://github.com/misterdai/mongoose-validator-all/issues"
+  },
+  "license": "MIT",
+  "main": "./lib/mongoose-validator",
+  "scripts": {
+    "test": "mocha -R list"
+  },
+  "engines": {
+    "node": "*"
+  },
+  "keywords": [
+    "mongoose",
+    "validate",
+    "validation",
+    "models",
+    "schema"
+  ],
+  "dependencies": {
+    "underscore": "^1.8.3",
+    "validator": "^4.0.2"
+  },
+  "devDependencies": {
+    "mongoose": "^4.0.5",
+    "mocha": "^2.2.5",
+    "should": "^6.0.3"
+  }
 }
