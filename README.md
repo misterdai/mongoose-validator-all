@@ -1,5 +1,7 @@
 # Mongoose Validator All
 
+[![Build Status](https://travis-ci.org/misterdai/mongoose-validator-all.svg?branch=master)](https://travis-ci.org/misterdai/mongoose-validator-all)
+
 Validators for [Mongoose](http://mongoosejs.com) schemas utilising [validator.js](https://github.com/chriso/validator.js).
 
 Mongoose Validator simply returns Mongoose style validation objects that utilises validator.js for the data validation.
