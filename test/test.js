@@ -2,12 +2,13 @@
 
 'use strict';
 
-var mongoose    = require('mongoose'),
-    should      = require('should'),
-    validate    = require('../lib/mongoose-validator'),
-    extend      = require('../lib/mongoose-validator').extend,
-    validatorjs = require('../lib/mongoose-validator').validatorjs,
-    Schema      = mongoose.Schema;
+var mongoose      = require('mongoose'),
+    should        = require('should'),
+    validate      = require('../lib/mongoose-validator'),
+    multiValidate = require('../lib/mongoose-validator').multiValidate,
+    extend        = require('../lib/mongoose-validator').extend,
+    validatorjs   = require('../lib/mongoose-validator').validatorjs,
+    Schema        = mongoose.Schema;
 
 // Create a custom validator directly to Node Validator prototype
 // ------------------------------------------------------------
@@ -428,6 +429,30 @@ describe('Mongoose Validator:', function() {
         return done();
       });
     });
+
+    it('Should allow multiValidate to not stop at the first fail', function(done) {
+      schema.path('name')
+        .validate(
+          multiValidate([
+            { validator: 'isLength', arguments: [4, 40], message: 'Username should be between 4 and 40 characters' },
+            { validator: 'isAlphanumeric', message: 'Username must only contain letters and digits' }
+          ])
+        )
+
+      should.exist(doc);
+
+      doc.name = '';
+
+      doc.save(function(err, person) {
+        should.exist(err);
+        should.not.exist(person);
+        err.errors.name.message.should.be.instanceof(Array).and.have.lengthOf(2);
+        err.errors.name.message[0].should.equal('Username should be between 4 and 40 characters');
+        err.errors.name.message[1].should.equal('Username must only contain letters and digits');
+        return done();
+      });
+    });
+
   });
 });
 
