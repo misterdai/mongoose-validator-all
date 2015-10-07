@@ -21,24 +21,48 @@ $ npm install mongoose-validator-all --save
 var mongoose = require('mongoose');
 var validate = require('mongoose-validator-all');
 
-var nameValidator = validate.multiValidate([
-  {
-    validator: 'isLength',
-    arguments: [3, 50],
-    message: 'Name should be between {ARGS[0]} and {ARGS[1]} characters'
-  }, {
-    validator: 'isAlphanumeric',
-    passIfEmpty: true,
-    message: 'Name should contain alpha-numeric characters only'
-  }
-]);
+var rules = {
+  name: validate.multiValidate([
+    {
+      validator: 'isLength',
+      arguments: [3, 50],
+      message: 'Name should be between {ARGS[0]} and {ARGS[1]} characters'
+    }, {
+      validator: 'isAlphanumeric',
+      passIfEmpty: true,
+      message: 'Name should contain alpha-numeric characters only'
+    }
+  ])
+};
 
-var Schema = new mongoose.Schema({
-  name: {type: String, required: true, validate: nameValidator}
+var UserSchema = new mongoose.Schema({
+  name: {type: String, required: true, validate: rules.name}
 });
+
+var User = mongoose.model('User', UserSchema);
 ```
 
 Error objects are returned as normal via Mongoose.  With the exception being that `multiValidate` returns an array of messages per document property validation error, instead of a single string.
+
+### Example of error returned
+
+```
+var User = mongoose.model('User');
+
+var user = new User({name: '_a'});
+
+user.save(function(error) {
+  console.log(error.errors.name.message);
+  /*
+    This will show an array of messages,
+    unlike the normal single string for the first validation fail
+  */
+  console.log('%d validation errors against name.', error.errors.name.message.length);
+
+  // Errors can easily be joined if a single string is required
+  console.log(error.errors.name.message.join(' '));
+});
+```
 
 See mongoose issue [#2612](https://github.com/Automattic/mongoose/issues/2612) for further information.
 
