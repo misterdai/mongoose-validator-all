@@ -1,30 +1,16 @@
-# Mongoose Validator
-
-[![Build Status](https://travis-ci.org/leepowellcouk/mongoose-validator.svg?branch=master)](https://travis-ci.org/leepowellcouk/mongoose-validator)
+# Mongoose Validator All
 
 Validators for [Mongoose](http://mongoosejs.com) schemas utilising [validator.js](https://github.com/chriso/validator.js).
 
 Mongoose Validator simply returns Mongoose style validation objects that utilises validator.js for the data validation.
 
-Version 1.0.x has been refactored to support a simpler interface and also validator.js 3.0.x
-
-**NOTE**: If you were using 0.2.x with your projects please be aware that upgrading to 1.0.x will break them. As of validator.js 3.0.x - many of the avilable validators have been changed. For example, 'regex' validator no longer exists and has been replaced with 'matches'.
+Mongoose-Validator-All is a fork on Mongoose-Validator.  It simply adds support for executing multiple validator.js rules, against a field, without stopping on the first fail (normal mongooose behaviour).  This is to avoid the problem of moving validation to your model, and forcing a user to resubmit several times to encounter different validation rules per submission.
 
 ## Installation
 
 ```bash
-$ npm install mongoose-validator --save
+$ npm install mongoose-validator-all --save
 ```
-
-### Legacy install
-
-If you need to install the 0.2.2 release, use the following command:
-
-```bash
-$ npm install mongoose-validator@0.2.2 --save
-```
-
-More details on 0.2.2 can be found [here](https://github.com/leepowellcouk/mongoose-validator/blob/0.2.2/README.md)
 
 ## Usage
 
@@ -150,13 +136,37 @@ validate({
 
 NOTE: As per validator.js documentation, the currently tested value is accessed through the first argument that is automatically passed to the validator function.
 
+## All validations tested
+
+Following the above, we can also force mongoose into validating all our rules without stopping at the first fail.
+
+```javascript
+validate.multiValidate([
+  {
+    validator: 'isLength',
+    arguments: [3, 10],
+    message: 'Name should be between {ARGS[0]} and {ARGS[1]} characters',
+  },
+  {
+    validator: 'isAlphanumeric',
+    message: '{PATH} should be alphanumeric',
+  }
+])
+```
+
+See mongoose issue [#2612](https://github.com/Automattic/mongoose/issues/2612) for further information.
+
 ## Contributors
 
-Special thanks to [Francesco Pasqua](https://github.com/cesconix/) for heavily refactoring the code into something far more future proof. Thanks also go to [Igor Escobar](https://github.com/igorescobar/) and [Todd Bluhm](https://github.com/toddbluhm/) for their contributions.
+Majority of thanks goes to [Lee Powell](https://github.com/leepowellcouk) for the [mongoose-validator](https://github.com/leepowellcouk/mongoose-validator) plugin this is all based off.  Also the code from [mongoose-validate-all](https://github.com/szdc/mongoose-validate-all) by [szdc](https://github.com/szdc).
+
+Quote from the mongoose-validator readme:
+
+> Special thanks to [Francesco Pasqua](https://github.com/cesconix/) for heavily refactoring the code into something far more future proof. Thanks also go to [Igor Escobar](https://github.com/igorescobar/) and [Todd Bluhm](https://github.com/toddbluhm/) for their contributions.
 
 ## License (MIT)
 
-Copyright (c) 2015 Lee Powell <lee@leepowell.co.uk>
+Copyright (c) 2015 David Boyer
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
