@@ -81,6 +81,33 @@ describe('Mongoose Validator:', function() {
       });
     });
 
+    it('passes the document onto the validators', function(done) {
+      schema.path('age')
+        .validate(multiValidate([
+          {
+            validator: function(age) {
+              if (age > 18) return this.interests && this.interests.length > 0;
+              return true;
+            },
+            message: 'Someone aged {VALUE} must have some interests!'
+          }
+        ]));
+
+      doc.age = 15;
+
+      doc.validate(function(err, person) {
+        should.ifError(err);
+
+        doc.age = 22;
+
+        doc.validate(function(err, person) {
+          should.exist(err);
+          should.exist(err.errors.age);
+          should(err.errors.age.message[0]).equal('Someone aged 22 must have some interests!');
+          return done();
+        });
+      });
+    });
   });
 });
 
